@@ -1,0 +1,24 @@
+{
+  "name": "TypeWriterGame",
+  "version": "1.0.0",
+  "description": "* You are going to build a typing game",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "scss": "node-sass --watch resources/styles/style.scss resources/styles/style.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AUnderwood9/TypeWriterGame.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AUnderwood9/TypeWriterGame/issues"
+  },
+  "homepage": "https://github.com/AUnderwood9/TypeWriterGame#readme",
+  "dependencies": {
+    "node-sass": "^4.7.2"
+  }
+}
