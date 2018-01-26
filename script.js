@@ -23,7 +23,7 @@ let isKeyCodeACharacter = (keyCodeToCheck) => {
 };
 
 let isKeyCodeAlphaNumeric = (keyCodeToCheck) => {
-    return (keyCodeToCheck === 32) || (keyCodeToCheck <= 122 && keyCodeToCheck >= 97)
+    return ((keyCodeToCheck === 32) || (keyCodeToCheck <= 122 && keyCodeToCheck >= 97));
 };
 
 let addTextToSenteceDiv = (sentenceToAdd) => {
@@ -40,33 +40,49 @@ let changeSentenceCursor = () => {
     let sentenceDiv = $("#sentence");
     let sentenceChildren = sentenceDiv.children();
     try{
-        if(currentCharacter < sentenceChildren.length-1){
+        if(currentCharacter <= sentenceChildren.length-1){
             changeBackgroundColor(`#sentence #char${currentCharacter+1}`, "#FFFF00");
             if(currentCharacter > 0){
                 removeStyling(`#sentence #char${currentCharacter}`);
-                console.log("removing style")
             }
             console.log("Character Index: " + currentCharacter);
             currentCharacter++;
-        }else if(currentCharacter === sentenceChildren.length-1){
-            //console.log("Done with this sentence");
+        }else if(currentCharacter === sentenceChildren.length){
+            console.log("Done with this sentence");
             currentCharacter = 0;
             currentSentence++;
     
             sentenceDiv.empty();
+            $("#feedback").empty();
             addTextToSenteceDiv(sentences[currentSentence]);
+            changeBackgroundColor(`#sentence #char${currentCharacter+1}`, "#FFFF00");
+            console.log(sentenceDiv);
         }
     }catch(err){
         alert("No more sentences!");
     }
-}
+};
+
+let characterCheck = (charCodeToCheck) => {
+    let doesCharCodeMatch = $(`#sentence #char${currentCharacter}`).text().charCodeAt() === charCodeToCheck;
+    if(doesCharCodeMatch){
+        let elementToAdd = $("<span class></span>").addClass("glyphicon glyphicon-ok");
+        $("#feedback").append(elementToAdd);
+    }else{
+        let elementToAdd = $("<span class></span>").addClass("glyphicon glyphicon-remove");
+        $("#feedback").append(elementToAdd);
+    }
+};
+
 
 $(document).ready(() => {
     let sentenceDiv = $("#sentence");
     addTextToSenteceDiv(sentences[currentSentence]);
     changeSentenceCursor();
+
     $(document).on("keydown", function( event ) {
         let currentKeyCode = event.which;
+        console.log(`${currentKeyCode} ${String.fromCharCode(currentKeyCode)}`);
         let shiftPressed = event.shiftKey;
         //console.log(currentKeyCode);
         if (shiftPressed) {
@@ -77,12 +93,16 @@ $(document).ready(() => {
                 changeBackgroundColor("#shift" + currentKeyCode, "#FFFF00");
                 //console.log("shifted");
             }
+            else
             changeBackgroundColor("#" + currentKeyCode, "#FFFF00");
         }else {
-            let characterCode = isKeyCodeACharacter(currentKeyCode) ? (currentKeyCode + 32) : currentKeyCode; 
-            //console.log(isKeyCodeACharacter(currentKeyCode) ? (currentKeyCode + 32) : currentKeyCode);
-            changeBackgroundColor("#" + characterCode, "#FFFF00");
-            changeSentenceCursor(currentCharacter, sentenceDiv.children());
+                let characterCode = isKeyCodeACharacter(currentKeyCode) ? (currentKeyCode + 32) : currentKeyCode; 
+                changeBackgroundColor("#" + characterCode, "#FFFF00");
+                if(isKeyCodeAlphaNumeric(characterCode)){
+                    //console.log(isKeyCodeACharacter(currentKeyCode) ? (currentKeyCode + 32) : currentKeyCode);
+                    characterCheck(characterCode);
+                    changeSentenceCursor();
+                }
         }
     }),$(document).on("keyup", function( event ) {
         let currentKeyCode = event.which;
