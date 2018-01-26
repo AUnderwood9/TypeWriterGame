@@ -1,4 +1,6 @@
 let sentenceCounter = 0;
+let currentCharacter = 0;
+let currentSentence = 0;
 let sentences = ["ten ate neite ate nee enet ite ate inet ent eate","Too ato too nOt enot one totA not anot tOO aNot", 
                     "oat itain oat tain nate eate tea anne inant nean", "itant eate anot eat nato inate eat anot tain eat", 
                     "nee ene ate ite tent tiet ent ine ene ete ene ate"];
@@ -34,39 +36,52 @@ let addTextToSenteceDiv = (sentenceToAdd) => {
     }
 };
 
-let changeSentenceCursor = (currentIndex, sentenceElement) => {
-    if(currentIndex < sentenceElement.length){
-        changeBackgroundColor(`#sentence #char${currentIndex+1}`, "#FFFF00");
-        if(currentIndex > 0){
-            removeStyling(`#sentence #char${currentIndex}`);
+let changeSentenceCursor = () => {
+    let sentenceDiv = $("#sentence");
+    let sentenceChildren = sentenceDiv.children();
+    try{
+        if(currentCharacter < sentenceChildren.length-1){
+            changeBackgroundColor(`#sentence #char${currentCharacter+1}`, "#FFFF00");
+            if(currentCharacter > 0){
+                removeStyling(`#sentence #char${currentCharacter}`);
+                console.log("removing style")
+            }
+            console.log("Character Index: " + currentCharacter);
+            currentCharacter++;
+        }else if(currentCharacter === sentenceChildren.length-1){
+            //console.log("Done with this sentence");
+            currentCharacter = 0;
+            currentSentence++;
+    
+            sentenceDiv.empty();
+            addTextToSenteceDiv(sentences[currentSentence]);
         }
+    }catch(err){
+        alert("No more sentences!");
     }
 }
 
 $(document).ready(() => {
     let sentenceDiv = $("#sentence");
-    let currentCharacter = 0;
-    let currentSentence = 0;
     addTextToSenteceDiv(sentences[currentSentence]);
-    changeSentenceCursor(currentCharacter, sentenceDiv.children());
+    changeSentenceCursor();
     $(document).on("keydown", function( event ) {
         let currentKeyCode = event.which;
         let shiftPressed = event.shiftKey;
-        console.log(currentKeyCode);
-        if ( shiftPressed ) {
+        //console.log(currentKeyCode);
+        if (shiftPressed) {
             shiftKeyboard("#keyboard-lower-container", "#keyboard-upper-container");
             //check if ascii are numbers or letters
             if(!isKeyCodeAlphaNumeric(currentKeyCode))
             {
                 changeBackgroundColor("#shift" + currentKeyCode, "#FFFF00");
-                console.log("shifted");
+                //console.log("shifted");
             }
             changeBackgroundColor("#" + currentKeyCode, "#FFFF00");
         }else {
             let characterCode = isKeyCodeACharacter(currentKeyCode) ? (currentKeyCode + 32) : currentKeyCode; 
-            console.log(isKeyCodeACharacter(currentKeyCode) ? (currentKeyCode + 32) : currentKeyCode);
+            //console.log(isKeyCodeACharacter(currentKeyCode) ? (currentKeyCode + 32) : currentKeyCode);
             changeBackgroundColor("#" + characterCode, "#FFFF00");
-            currentCharacter++;
             changeSentenceCursor(currentCharacter, sentenceDiv.children());
         }
     }),$(document).on("keyup", function( event ) {
