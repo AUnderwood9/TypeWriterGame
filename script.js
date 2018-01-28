@@ -1,10 +1,19 @@
 let sentenceCounter = 0;
 let currentCharacter = 0;
 let currentSentence = 0;
+let charactersWrong = 0;
+let typingTime = 0;
 let sentences = ["ten ate neite ate nee enet ite ate inet ent eate","Too ato too nOt enot one totA not anot tOO aNot", 
                     "oat itain oat tain nate eate tea anne inant nean", "itant eate anot eat nato inate eat anot tain eat", 
                     "nee ene ate ite tent tiet ent ine ene ete ene ate"];
 var start = new Date();
+
+let numOfWords = sentences.map((item)=>{
+    console.log(item.split(" "))
+    return Number(item.split(" ").length);
+}).reduce((total, num2) => {
+    return total + num2;
+}, 0);
 
 let changeBackgroundColor = (selector, color) => {
     $(selector).css("background-color", color);
@@ -46,10 +55,8 @@ let changeSentenceCursor = () => {
             if(currentCharacter > 0){
                 removeStyling(`#sentence #char${currentCharacter}`);
             }
-            //console.log("Character Index: " + currentCharacter);
             currentCharacter++;
         }else if(currentCharacter === sentenceChildren.length){
-            //console.log("Done with this sentence");
             currentCharacter = 0;
             currentSentence++;
     
@@ -57,18 +64,17 @@ let changeSentenceCursor = () => {
             emptyElement($("#feedback").empty());
             addTextToSenteceDiv(sentences[currentSentence]);
             changeBackgroundColor(`#sentence #char${currentCharacter+1}`, "#FFFF00");
-            //console.log(sentenceDiv);
             currentCharacter++;
         }
     }catch(err){
         var elapsed = new Date() - start;
         elapsed /= 60000;
+        typingTime = Math.round(numOfWords / elapsed - 2 * charactersWrong);
 
-        alert("No more sentences! Time taken in minutes: " +  elapsed);
-        alert("Your done!");
-    }
+        alert("No more sentences! Time taken in Words Per Minute (WPM): " +  typingTime);
 };
 
+    }
 let expectedLetter = (targetLetter) => {
     let characterDiv = $("#target-letter");
 
@@ -88,6 +94,7 @@ let characterCheck = (charCodeToCheck) => {
     }else{
         let elementToAdd = $("<span></span>").addClass("glyphicon glyphicon-remove red");
         $("#feedback").append(elementToAdd);
+        charactersWrong++;
     }
 
     return doesCharCodeMatch;
@@ -107,12 +114,11 @@ $(document).ready(() => {
         console.log(`Shifted? ${shiftPressed}`);
         if (shiftPressed) {
             shiftKeyboard("#keyboard-lower-container", "#keyboard-upper-container");
-            //console.log(`Is alpha numeric? ${isKeyCodeAlphaNumeric(currentKeyCode)}`);
+
             //check if ascii are numbers or letters
             if(isKeyCodeAlphaNumeric(currentKeyCode))
             {
                 changeBackgroundColor("#" + currentKeyCode, "#FFFF00");
-                //console.log(isKeyCodeACharacter(currentKeyCode) ? (currentKeyCode + 32) : currentKeyCode);
                 if(characterCheck(currentKeyCode)){
                     changeSentenceCursor();
                     expectedLetter($(`#sentence #char${currentCharacter}`).text());
@@ -124,7 +130,6 @@ $(document).ready(() => {
         }else {
                 let characterCode = isKeyCodeACharacter(currentKeyCode) ? (currentKeyCode + 32) : currentKeyCode; 
                 changeBackgroundColor("#" + characterCode, "#FFFF00");
-                //console.log(isKeyCodeACharacter(currentKeyCode) ? (currentKeyCode + 32) : currentKeyCode);
                 if(characterCheck(characterCode)){
                     changeSentenceCursor();
                     expectedLetter($(`#sentence #char${currentCharacter}`).text());
