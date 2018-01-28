@@ -4,8 +4,12 @@
   "description": "* You are going to build a typing game",
   "main": "script.js",
   "scripts": {
+<<<<<<< HEAD
     "test": "echo \"Error: no test specified\" && exit 1",
     "scss": "node-sass --watch resources/styles/style.scss resources/styles/style.css"
+=======
+    "test": "echo \"Error: no test specified\" && exit 1"
+>>>>>>> origin
   },
   "repository": {
     "type": "git",
