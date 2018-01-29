@@ -6,13 +6,17 @@ let typingTime = 0;
 let sentences = ["ten ate neite ate nee enet ite ate inet ent eate","Too ato too nOt enot one totA not anot tOO aNot", 
                     "oat itain oat tain nate eate tea anne inant nean", "itant eate anot eat nato inate eat anot tain eat", 
                     "nee ene ate ite tent tiet ent ine ene ete ene ate"];
-var start = new Date();
+let time;
 
-let numOfWords = sentences.map((item)=>{
-    console.log(item.split(" "))
-    return Number(item.split(" ").length);
-}).reduce((total, num2) => {
-    return total + num2;
+// let numOfWords = sentences.map((item)=>{
+//     console.log(item.split(" "))
+//     return Number(item.split(" ").length);
+// }).reduce((total, num2) => {
+//     return total + num2;
+// }, 0);
+
+let numOfWords = sentences.reduce((acc, curr) => {
+    return acc + curr.split(' ').length;
 }, 0);
 
 let changeBackgroundColor = (selector, color) => {
@@ -67,7 +71,7 @@ let changeSentenceCursor = () => {
             currentCharacter++;
         }
     }catch(err){
-        var elapsed = new Date() - start;
+        var elapsed = new Date() - time;
         elapsed /= 60000;
         typingTime = Math.round(numOfWords / elapsed - 2 * charactersWrong);
 
@@ -108,6 +112,8 @@ $(document).ready(() => {
     expectedLetter($(`#sentence #char${currentCharacter}`).text());
 
     $(document).on("keydown", function( event ) {
+        if(time === undefined)
+            time = new Date()
         let currentKeyCode = event.which;
         console.log(`${currentKeyCode} ${String.fromCharCode(currentKeyCode)}`);
         let shiftPressed = event.shiftKey;

@@ -8,7 +8,7 @@
   letter-spacing: 3px; }
   #prompt-container div {
     width: 100%;
-    height: 1em; }
+    height: 2em; }
   #prompt-container .glyphicon-ok {
     color: green; }
   #prompt-container .glyphicon-remove {
@@ -23,3 +23,8 @@
 
 #keyboard-upper-container {
   display: none; }
+
+#target-letter {
+  margin: 1em auto 0 auto; }
+
+/*# sourceMappingURL=style.css.map */
